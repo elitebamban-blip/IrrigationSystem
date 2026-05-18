@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Sistema de Riego IoT</title>
+
+  <link rel="stylesheet" href="style.css">
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+
+<body>
+
+  <h1>Sistema de Riego Inteligente</h1>
+
+  <div class="cards">
+
+    <div class="card">
+      <h2>Temperatura</h2>
+      <p id="temperatura">-- °C</p>
+    </div>
+
+    <div class="card">
+      <h2>Humedad Aire</h2>
+      <p id="humedadAire">-- %</p>
+    </div>
+
+    <div class="card">
+      <h2>Humedad Suelo</h2>
+      <p id="humedadSuelo">-- %</p>
+    </div>
+
+    <div class="card">
+      <h2>Radiación</h2>
+      <p id="radiacion">-- W/m²</p>
+    </div>
+
+    <div class="card">
+      <h2>Bomba</h2>
+      <p id="bomba">--</p>
+    </div>
+
+  </div>
+
+  <div class="chart-container">
+
+    <canvas id="tempChart"></canvas>
+
+  </div>
+
+  <h2>Histórico</h2>
+
+  <table>
+
+    <thead>
+      <tr>
+        <th>Fecha</th>
+        <th>Temp</th>
+        <th>Hum. Aire</th>
+        <th>Hum. Suelo</th>
+        <th>Radiación</th>
+        <th>Bomba</th>
+      </tr>
+    </thead>
+
+    <tbody id="tablaDatos"></tbody>
+
+  </table>
+
+  <script src="app.js"></script>
+
+</body>
+
+</html>
