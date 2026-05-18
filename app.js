@@ -1,4 +1,4 @@
-const API_URL = https://zxov7zriwi.execute-api.us-east-2.amazonaws.com/GetIrrigationData";
+const API_URL = "https://zxov7zriwi.execute-api.us-east-2.amazonaws.com/GetIrrigationData";
 
 let chart;
 
