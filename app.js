@@ -95,7 +95,7 @@ async function controlBomba(estado) {
   }
 }
 
-function crearGrafica(data) {
+function crearGraficas(data) {
 
   const labels = data.slice(0,20).map(item => item.fecha_hora);
 
@@ -126,6 +126,90 @@ function crearGrafica(data) {
       }]
     }
   });
+}
+
+function crearGraficas(data) {
+
+  const labels = data.slice(0,20)
+                     .map(item => item.fecha_hora)
+                     .reverse();
+
+  const temperaturas = data.slice(0,20)
+                            .map(item => item.temperatura)
+                            .reverse();
+
+  const humedadSuelo = data.slice(0,20)
+                            .map(item => item.humedad_suelo)
+                            .reverse();
+
+  const humedadAire = data.slice(0,20)
+                            .map(item => item.humedad_aire)
+                            .reverse();
+
+  const radiacion = data.slice(0,20)
+                            .map(item => item.radiacion)
+                            .reverse();
+
+  if(chart) chart.destroy();
+  if(soilChart) soilChart.destroy();
+  if(humidityChart) humidityChart.destroy();
+  if(radiationChart) radiationChart.destroy();
+
+  chart = new Chart(
+    document.getElementById('tempChart'),
+    {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [{
+          label: 'Temperatura',
+          data: temperaturas
+        }]
+      }
+    }
+  );
+
+  soilChart = new Chart(
+    document.getElementById('soilChart'),
+    {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [{
+          label: 'Humedad Suelo',
+          data: humedadSuelo
+        }]
+      }
+    }
+  );
+
+  humidityChart = new Chart(
+    document.getElementById('humidityChart'),
+    {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [{
+          label: 'Humedad Aire',
+          data: humedadAire
+        }]
+      }
+    }
+  );
+
+  radiationChart = new Chart(
+    document.getElementById('radiationChart'),
+    {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [{
+          label: 'Radiación',
+          data: radiacion
+        }]
+      }
+    }
+  );
 }
 
 obtenerDatos();
