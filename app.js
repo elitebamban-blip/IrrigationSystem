@@ -54,6 +54,24 @@ async function obtenerDatos() {
 
         crearGraficaRadiacion(labels, radiacion);
 
+        const tabla = document.getElementById("tablaDatos");
+
+tabla.innerHTML = "";
+
+datos.forEach(dato => {
+
+    tabla.innerHTML += `
+        <tr>
+            <td>${dato.fecha_hora}</td>
+            <td>${dato.temperatura} °C</td>
+            <td>${dato.humedad_aire} %</td>
+            <td>${dato.humedad_suelo} %</td>
+            <td>${dato.radiacion} W/m²</td>
+            <td>${dato.bomba}</td>
+        </tr>
+    `;
+});
+
     } catch (error) {
 
         console.error(error);
