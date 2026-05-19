@@ -1,216 +1,179 @@
-const API_URL = "https://zxov7zriwi.execute-api.us-east-2.amazonaws.com/GetIrrigationData";
-const CONTROL_API = "https://o551s4jg05.execute-api.us-east-2.amazonaws.com/ControlBomba";
+const API_URL = "https://zxov7zriwi.execute-api.us-east-2.amazonaws.com";
 
-let chart;
-let soilChart;
-let humidityChart;
-let radiationChart;
+const API_BOMBA = "https://o551s4jg05.execute-api.us-east-2.amazonaws.com/ControlBomba";
+
+let graficaTemperatura;
+let graficaHumedadAire;
+let graficaHumedadSuelo;
+let graficaRadiacion;
 
 async function obtenerDatos() {
 
-  try {
+    try {
 
-    const response = await fetch(API_URL);
+        const response = await fetch(API_URL);
 
-    const data = await response.json();
+        const datos = await response.json();
 
-    console.log(data);
+        console.log(datos);
 
-    if(data.length === 0) return;
+        if (!datos || datos.length === 0) return;
 
-    const ultimo = data[0];
+        datos.reverse();
 
-    document.getElementById("temperatura").innerText =
-      ultimo.temperatura + " °C";
+        const labels = datos.map(d => d.fecha_hora);
 
-    document.getElementById("humedadAire").innerText =
-      ultimo.humedad_aire + " %";
+        const temperaturas = datos.map(d => d.temperatura);
 
-    document.getElementById("humedadSuelo").innerText =
-      ultimo.humedad_suelo + " %";
+        const humedadAire = datos.map(d => d.humedad_aire);
 
-    document.getElementById("radiacion").innerText =
-      ultimo.radiacion + " W/m²";
+        const humedadSuelo = datos.map(d => d.humedad_suelo);
 
-    document.getElementById("bomba").innerText =
-      ultimo.bomba;
+        const radiacion = datos.map(d => d.radiacion);
 
-    llenarTabla(data);
+        document.getElementById("temperatura").innerText =
+            temperaturas[temperaturas.length - 1] + " °C";
 
-    crearGrafica(data);
+        document.getElementById("humedadAire").innerText =
+            humedadAire[humedadAire.length - 1] + " %";
 
-  } catch(error) {
+        document.getElementById("humedadSuelo").innerText =
+            humedadSuelo[humedadSuelo.length - 1] + " %";
 
-    console.error(error);
-  }
+        document.getElementById("radiacion").innerText =
+            radiacion[radiacion.length - 1] + " W/m²";
+
+        crearGraficaTemperatura(labels, temperaturas);
+
+        crearGraficaHumedadAire(labels, humedadAire);
+
+        crearGraficaHumedadSuelo(labels, humedadSuelo);
+
+        crearGraficaRadiacion(labels, radiacion);
+
+    } catch (error) {
+
+        console.error(error);
+
+    }
 }
 
-function llenarTabla(data) {
 
-  const tabla = document.getElementById("tablaDatos");
+function crearGraficaTemperatura(labels, data) {
 
-  tabla.innerHTML = "";
+    if (graficaTemperatura) {
+        graficaTemperatura.destroy();
+    }
 
-  data.slice(0, 20).forEach(item => {
+    const ctx = document.getElementById("graficaTemperatura");
 
-    tabla.innerHTML += `
-      <tr>
-        <td>${item.fecha_hora}</td>
-        <td>${item.temperatura}</td>
-        <td>${item.humedad_aire}</td>
-        <td>${item.humedad_suelo}</td>
-        <td>${item.radiacion}</td>
-        <td>${item.bomba}</td>
-      </tr>
-    `;
-  });
+    graficaTemperatura = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Temperatura °C',
+                data: data,
+                borderWidth: 2
+            }]
+        }
+    });
 }
+
+
+function crearGraficaHumedadAire(labels, data) {
+
+    if (graficaHumedadAire) {
+        graficaHumedadAire.destroy();
+    }
+
+    const ctx = document.getElementById("graficaHumedadAire");
+
+    graficaHumedadAire = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Humedad Relativa %',
+                data: data,
+                borderWidth: 2
+            }]
+        }
+    });
+}
+
+
+function crearGraficaHumedadSuelo(labels, data) {
+
+    if (graficaHumedadSuelo) {
+        graficaHumedadSuelo.destroy();
+    }
+
+    const ctx = document.getElementById("graficaHumedadSuelo");
+
+    graficaHumedadSuelo = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Humedad Suelo %',
+                data: data,
+                borderWidth: 2
+            }]
+        }
+    });
+}
+
+
+function crearGraficaRadiacion(labels, data) {
+
+    if (graficaRadiacion) {
+        graficaRadiacion.destroy();
+    }
+
+    const ctx = document.getElementById("graficaRadiacion");
+
+    graficaRadiacion = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Radiación W/m²',
+                data: data,
+                borderWidth: 2
+            }]
+        }
+    });
+}
+
 
 async function controlBomba(estado) {
 
-  try {
+    try {
 
-    const response = await fetch(CONTROL_API, {
+        const response = await fetch(API_BOMBA, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                estado: estado
+            })
+        });
 
-      method: "POST",
+        const resultado = await response.json();
 
-      headers: {
-        "Content-Type": "application/json"
-      },
+        console.log(resultado);
 
-      body: JSON.stringify({
-        estado: estado
-      })
-    });
+        alert("Bomba: " + estado);
 
-    const data = await response.json();
+    } catch (error) {
 
-    console.log(data);
+        console.error(error);
 
-    alert("Bomba " + estado);
-
-  } catch(error) {
-
-    console.error(error);
-  }
+    }
 }
 
-function crearGraficas(data) {
-
-  const labels = data.slice(0,20).map(item => item.fecha_hora);
-
-  const temperaturas = data.slice(0,20)
-                           .map(item => item.temperatura);
-
-  const ctx = document.getElementById('tempChart');
-
-  if(chart) {
-    chart.destroy();
-  }
-
-  chart = new Chart(ctx, {
-
-    type: 'line',
-
-    data: {
-
-      labels: labels.reverse(),
-
-      datasets: [{
-
-        label: 'Temperatura',
-
-        data: temperaturas.reverse(),
-
-        borderWidth: 2
-      }]
-    }
-  });
-}
-
-function crearGraficas(data) {
-
-  const labels = data.slice(0,20)
-                     .map(item => item.fecha_hora)
-                     .reverse();
-
-  const temperaturas = data.slice(0,20)
-                            .map(item => item.temperatura)
-                            .reverse();
-
-  const humedadSuelo = data.slice(0,20)
-                            .map(item => item.humedad_suelo)
-                            .reverse();
-
-  const humedadAire = data.slice(0,20)
-                            .map(item => item.humedad_aire)
-                            .reverse();
-
-  const radiacion = data.slice(0,20)
-                            .map(item => item.radiacion)
-                            .reverse();
-
-  if(chart) chart.destroy();
-  if(soilChart) soilChart.destroy();
-  if(humidityChart) humidityChart.destroy();
-  if(radiationChart) radiationChart.destroy();
-
-  chart = new Chart(
-    document.getElementById('tempChart'),
-    {
-      type: 'line',
-      data: {
-        labels,
-        datasets: [{
-          label: 'Temperatura',
-          data: temperaturas
-        }]
-      }
-    }
-  );
-
-  soilChart = new Chart(
-    document.getElementById('soilChart'),
-    {
-      type: 'line',
-      data: {
-        labels,
-        datasets: [{
-          label: 'Humedad Suelo',
-          data: humedadSuelo
-        }]
-      }
-    }
-  );
-
-  humidityChart = new Chart(
-    document.getElementById('humidityChart'),
-    {
-      type: 'line',
-      data: {
-        labels,
-        datasets: [{
-          label: 'Humedad Aire',
-          data: humedadAire
-        }]
-      }
-    }
-  );
-
-  radiationChart = new Chart(
-    document.getElementById('radiationChart'),
-    {
-      type: 'line',
-      data: {
-        labels,
-        datasets: [{
-          label: 'Radiación',
-          data: radiacion
-        }]
-      }
-    }
-  );
-}
 
 obtenerDatos();
 
