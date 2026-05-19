@@ -2,6 +2,9 @@ const API_URL = "https://zxov7zriwi.execute-api.us-east-2.amazonaws.com/GetIrrig
 const CONTROL_API = "https://o551s4jg05.execute-api.us-east-2.amazonaws.com/ControlBomba";
 
 let chart;
+let soilChart;
+let humidityChart;
+let radiationChart;
 
 async function obtenerDatos() {
 
