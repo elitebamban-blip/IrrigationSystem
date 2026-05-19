@@ -1,3 +1,10 @@
+const token = localStorage.getItem("token");
+
+if(!token){
+
+    window.location = "login.html";
+}
+
 const API_URL = "https://zxov7zriwi.execute-api.us-east-2.amazonaws.com/GetIrrigationData";
 
 const API_BOMBA = "https://o551s4jg05.execute-api.us-east-2.amazonaws.com/ControlBomba";
