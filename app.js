@@ -1,14 +1,20 @@
 const token = localStorage.getItem("token");
 
-const API_URL = "https://zxov7zriwi.execute-api.us-east-2.amazonaws.com/GetIrrigationData";
+if (!token) {
 
-const API_BOMBA = "https://o551s4jg05.execute-api.us-east-2.amazonaws.com/ControlBomba";
+    window.location.href = "login.html";
+}
+
+const API_URL =
+"https://zxov7zriwi.execute-api.us-east-2.amazonaws.com/GetIrrigationData";
+
+const API_BOMBA =
+"https://o551s4jg05.execute-api.us-east-2.amazonaws.com/ControlBomba";
 
 let graficaTemperatura;
 let graficaHumedadAire;
 let graficaHumedadSuelo;
 let graficaRadiacion;
-
 
 async function obtenerDatos() {
 
@@ -26,17 +32,17 @@ async function obtenerDatos() {
 
         const labels = datos.map(d => d.fecha_hora);
 
-        const temperaturas = datos.map(d => d.temperatura);
+        const temperaturas =
+            datos.map(d => d.temperatura);
 
-        const humedadAire = datos.map(d => d.humedad_aire);
+        const humedadAire =
+            datos.map(d => d.humedad_aire);
 
-        const humedadSuelo = datos.map(d => d.humedad_suelo);
+        const humedadSuelo =
+            datos.map(d => d.humedad_suelo);
 
-        const radiacion = datos.map(d => d.radiacion);
-
-
-        document.getElementById("bomba").innerText =
-            datos[datos.length - 1].bomba;
+        const radiacion =
+            datos.map(d => d.radiacion);
 
         document.getElementById("temperatura").innerText =
             temperaturas[temperaturas.length - 1] + " °C";
@@ -50,6 +56,8 @@ async function obtenerDatos() {
         document.getElementById("radiacion").innerText =
             radiacion[radiacion.length - 1] + " W/m²";
 
+        document.getElementById("bomba").innerText =
+            datos[datos.length - 1].bomba;
 
         crearGraficaTemperatura(labels, temperaturas);
 
@@ -59,24 +67,7 @@ async function obtenerDatos() {
 
         crearGraficaRadiacion(labels, radiacion);
 
-
-        const tabla = document.getElementById("tablaDatos");
-
-        tabla.innerHTML = "";
-
-        datos.forEach(dato => {
-
-            tabla.innerHTML += `
-                <tr>
-                    <td>${dato.fecha_hora}</td>
-                    <td>${dato.temperatura} °C</td>
-                    <td>${dato.humedad_aire} %</td>
-                    <td>${dato.humedad_suelo} %</td>
-                    <td>${dato.radiacion} W/m²</td>
-                    <td>${dato.bomba}</td>
-                </tr>
-            `;
-        });
+        llenarTabla(datos);
 
     } catch (error) {
 
@@ -84,6 +75,27 @@ async function obtenerDatos() {
     }
 }
 
+function llenarTabla(datos) {
+
+    const tabla =
+        document.getElementById("tablaDatos");
+
+    tabla.innerHTML = "";
+
+    datos.forEach(dato => {
+
+        tabla.innerHTML += `
+            <tr>
+                <td>${dato.fecha_hora}</td>
+                <td>${dato.temperatura} °C</td>
+                <td>${dato.humedad_aire} %</td>
+                <td>${dato.humedad_suelo} %</td>
+                <td>${dato.radiacion} W/m²</td>
+                <td>${dato.bomba}</td>
+            </tr>
+        `;
+    });
+}
 
 function crearGraficaTemperatura(labels, data) {
 
@@ -91,21 +103,21 @@ function crearGraficaTemperatura(labels, data) {
         graficaTemperatura.destroy();
     }
 
-    const ctx = document.getElementById("graficaTemperatura");
-
-    graficaTemperatura = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: labels,
-            datasets: [{
-                label: 'Temperatura °C',
-                data: data,
-                borderWidth: 2
-            }]
+    graficaTemperatura = new Chart(
+        document.getElementById("graficaTemperatura"),
+        {
+            type: "line",
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: "Temperatura °C",
+                    data: data,
+                    borderWidth: 2
+                }]
+            }
         }
-    });
+    );
 }
-
 
 function crearGraficaHumedadAire(labels, data) {
 
@@ -113,21 +125,21 @@ function crearGraficaHumedadAire(labels, data) {
         graficaHumedadAire.destroy();
     }
 
-    const ctx = document.getElementById("graficaHumedadAire");
-
-    graficaHumedadAire = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: labels,
-            datasets: [{
-                label: 'Humedad Relativa %',
-                data: data,
-                borderWidth: 2
-            }]
+    graficaHumedadAire = new Chart(
+        document.getElementById("graficaHumedadAire"),
+        {
+            type: "line",
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: "Humedad Aire %",
+                    data: data,
+                    borderWidth: 2
+                }]
+            }
         }
-    });
+    );
 }
-
 
 function crearGraficaHumedadSuelo(labels, data) {
 
@@ -135,21 +147,21 @@ function crearGraficaHumedadSuelo(labels, data) {
         graficaHumedadSuelo.destroy();
     }
 
-    const ctx = document.getElementById("graficaHumedadSuelo");
-
-    graficaHumedadSuelo = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: labels,
-            datasets: [{
-                label: 'Humedad Suelo %',
-                data: data,
-                borderWidth: 2
-            }]
+    graficaHumedadSuelo = new Chart(
+        document.getElementById("graficaHumedadSuelo"),
+        {
+            type: "line",
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: "Humedad Suelo %",
+                    data: data,
+                    borderWidth: 2
+                }]
+            }
         }
-    });
+    );
 }
-
 
 function crearGraficaRadiacion(labels, data) {
 
@@ -157,21 +169,21 @@ function crearGraficaRadiacion(labels, data) {
         graficaRadiacion.destroy();
     }
 
-    const ctx = document.getElementById("graficaRadiacion");
-
-    graficaRadiacion = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: labels,
-            datasets: [{
-                label: 'Radiación W/m²',
-                data: data,
-                borderWidth: 2
-            }]
+    graficaRadiacion = new Chart(
+        document.getElementById("graficaRadiacion"),
+        {
+            type: "line",
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: "Radiación W/m²",
+                    data: data,
+                    borderWidth: 2
+                }]
+            }
         }
-    });
+    );
 }
-
 
 async function controlBomba(estado) {
 
@@ -190,7 +202,8 @@ async function controlBomba(estado) {
             })
         });
 
-        const resultado = await response.json();
+        const resultado =
+            await response.json();
 
         console.log(resultado);
 
@@ -202,14 +215,12 @@ async function controlBomba(estado) {
     }
 }
 
-
 function logout() {
 
     localStorage.removeItem("token");
 
     window.location.href = "login.html";
 }
-
 
 obtenerDatos();
 
