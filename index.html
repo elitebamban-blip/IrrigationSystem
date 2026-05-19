@@ -16,7 +16,13 @@
 </head>
 
 <body>
+<script>
 
+if(!localStorage.getItem("token")){
+    window.location = "login.html";
+}
+
+</script>
   <h1>Sistema de Riego Inteligente</h1>
 
   <div class="cards">
@@ -93,9 +99,13 @@
 
   </table>
 
-  <button onclick="logout()">
-Cerrar sesión
+  <div class="logout-container">
+
+<button class="logout-btn" onclick="logout()">
+Cerrar Sesión
 </button>
+
+</div>
 
   <script src="app.js"></script>
 
