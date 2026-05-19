@@ -31,6 +31,9 @@ async function obtenerDatos() {
 
         const radiacion = datos.map(d => d.radiacion);
 
+        document.getElementById("bomba").innerText =
+    datos[datos.length - 1].bomba;
+        
         document.getElementById("temperatura").innerText =
             temperaturas[temperaturas.length - 1] + " °C";
 
