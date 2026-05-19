@@ -182,3 +182,39 @@ tr:hover {
 
   background: #f1f1f1;
 }
+.logout-container{
+
+  margin-top: 30px;
+
+  text-align: center;
+}
+
+.logout-btn{
+
+  background: #34495e;
+
+  color: white;
+
+  border: none;
+
+  padding: 14px 28px;
+
+  border-radius: 12px;
+
+  font-size: 17px;
+
+  font-weight: bold;
+
+  cursor: pointer;
+
+  transition: 0.3s;
+
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+.logout-btn:hover{
+
+  background: #2c3e50;
+
+  transform: scale(1.05);
+}
