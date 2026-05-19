@@ -1,7 +1,6 @@
 const token = localStorage.getItem("token");
 
-if(!token){
-
+if (!token) {
     window.location = "login.html";
 }
 
@@ -14,11 +13,16 @@ let graficaHumedadAire;
 let graficaHumedadSuelo;
 let graficaRadiacion;
 
+
 async function obtenerDatos() {
 
     try {
 
-        const response = await fetch(API_URL);
+        const response = await fetch(API_URL, {
+            headers: {
+                Authorization: token
+            }
+        });
 
         const datos = await response.json();
 
@@ -39,8 +43,8 @@ async function obtenerDatos() {
         const radiacion = datos.map(d => d.radiacion);
 
         document.getElementById("bomba").innerText =
-    datos[datos.length - 1].bomba;
-        
+            datos[datos.length - 1].bomba;
+
         document.getElementById("temperatura").innerText =
             temperaturas[temperaturas.length - 1] + " °C";
 
@@ -61,28 +65,33 @@ async function obtenerDatos() {
 
         crearGraficaRadiacion(labels, radiacion);
 
+
         const tabla = document.getElementById("tablaDatos");
 
-tabla.innerHTML = "";
+        tabla.innerHTML = "";
 
-datos.forEach(dato => {
+        datos.forEach(dato => {
 
-    tabla.innerHTML += `
-        <tr>
-            <td>${dato.fecha_hora}</td>
-            <td>${dato.temperatura} °C</td>
-            <td>${dato.humedad_aire} %</td>
-            <td>${dato.humedad_suelo} %</td>
-            <td>${dato.radiacion} W/m²</td>
-            <td>${dato.bomba}</td>
-        </tr>
-    `;
-});
+            tabla.innerHTML += `
+                <tr>
+                    <td>${dato.fecha_hora}</td>
+                    <td>${dato.temperatura} °C</td>
+                    <td>${dato.humedad_aire} %</td>
+                    <td>${dato.humedad_suelo} %</td>
+                    <td>${dato.radiacion} W/m²</td>
+                    <td>${dato.bomba}</td>
+                </tr>
+            `;
+        });
 
     } catch (error) {
 
         console.error(error);
 
+        if (error) {
+            localStorage.removeItem("token");
+            window.location = "login.html";
+        }
     }
 }
 
@@ -180,10 +189,14 @@ async function controlBomba(estado) {
     try {
 
         const response = await fetch(API_BOMBA, {
+
             method: "POST",
+
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                Authorization: token
             },
+
             body: JSON.stringify({
                 estado: estado
             })
@@ -198,14 +211,15 @@ async function controlBomba(estado) {
     } catch (error) {
 
         console.error(error);
-
     }
-    function logout(){
+}
+
+
+function logout() {
 
     localStorage.removeItem("token");
 
     window.location = "login.html";
-}
 }
 
 
