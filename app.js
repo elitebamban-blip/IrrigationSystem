@@ -208,8 +208,6 @@ async function controlBomba(estado) {
 function logout() {
 
     localStorage.removeItem("token");
-
-    window.location = "login.html";
 }
 
 
