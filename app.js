@@ -86,13 +86,8 @@ async function obtenerDatos() {
 
     } catch (error) {
 
-        console.error(error);
-
-        if (error) {
-            localStorage.removeItem("token");
-            window.location = "login.html";
-        }
-    }
+    console.error(error);
+}
 }
 
 
