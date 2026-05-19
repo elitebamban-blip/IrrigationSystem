@@ -77,4 +77,26 @@ th {
   background: #333;
 
   color: white;
+  
+  .control-panel {
+
+  margin-top: 30px;
+
+  text-align: center;
+}
+
+.control-panel button {
+
+  padding: 15px 30px;
+
+  margin: 10px;
+
+  font-size: 18px;
+
+  border: none;
+
+  border-radius: 10px;
+
+  cursor: pointer;
+}
 }
