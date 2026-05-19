@@ -1,4 +1,5 @@
 const API_URL = "https://zxov7zriwi.execute-api.us-east-2.amazonaws.com/GetIrrigationData";
+const CONTROL_API = "https://o551s4jg05.execute-api.us-east-2.amazonaws.com/ControlBomba";
 
 let chart;
 
@@ -60,6 +61,35 @@ function llenarTabla(data) {
       </tr>
     `;
   });
+}
+
+async function controlBomba(estado) {
+
+  try {
+
+    const response = await fetch(CONTROL_API, {
+
+      method: "POST",
+
+      headers: {
+        "Content-Type": "application/json"
+      },
+
+      body: JSON.stringify({
+        estado: estado
+      })
+    });
+
+    const data = await response.json();
+
+    console.log(data);
+
+    alert("Bomba " + estado);
+
+  } catch(error) {
+
+    console.error(error);
+  }
 }
 
 function crearGrafica(data) {
