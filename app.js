@@ -200,6 +200,12 @@ async function controlBomba(estado) {
         console.error(error);
 
     }
+    function logout(){
+
+    localStorage.removeItem("token");
+
+    window.location = "login.html";
+}
 }
 
 
