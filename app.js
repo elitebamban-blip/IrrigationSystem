@@ -1,4 +1,5 @@
 const token = localStorage.getItem("token");
+
 const API_URL = "https://zxov7zriwi.execute-api.us-east-2.amazonaws.com/GetIrrigationData";
 
 const API_BOMBA = "https://o551s4jg05.execute-api.us-east-2.amazonaws.com/ControlBomba";
@@ -13,11 +14,7 @@ async function obtenerDatos() {
 
     try {
 
-        const response = await fetch(API_URL, {
-            headers: {
-                Authorization: token
-            }
-        });
+        const response = await fetch(API_URL);
 
         const datos = await response.json();
 
@@ -37,6 +34,7 @@ async function obtenerDatos() {
 
         const radiacion = datos.map(d => d.radiacion);
 
+
         document.getElementById("bomba").innerText =
             datos[datos.length - 1].bomba;
 
@@ -51,6 +49,7 @@ async function obtenerDatos() {
 
         document.getElementById("radiacion").innerText =
             radiacion[radiacion.length - 1] + " W/m²";
+
 
         crearGraficaTemperatura(labels, temperaturas);
 
@@ -81,8 +80,8 @@ async function obtenerDatos() {
 
     } catch (error) {
 
-    console.error(error);
-}
+        console.error(error);
+    }
 }
 
 
@@ -183,8 +182,7 @@ async function controlBomba(estado) {
             method: "POST",
 
             headers: {
-                "Content-Type": "application/json",
-                Authorization: token
+                "Content-Type": "application/json"
             },
 
             body: JSON.stringify({
@@ -208,6 +206,8 @@ async function controlBomba(estado) {
 function logout() {
 
     localStorage.removeItem("token");
+
+    window.location.href = "login.html";
 }
 
 
