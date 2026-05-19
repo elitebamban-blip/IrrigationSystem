@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>Login</title>
+
+<style>
+
+body{
+    font-family: Arial;
+    text-align:center;
+    margin-top:100px;
+}
+
+input{
+    margin:10px;
+    padding:10px;
+    width:250px;
+}
+
+button{
+    padding:10px 20px;
+}
+
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/amazon-cognito-identity-js@6.3.9/dist/amazon-cognito-identity.min.js"></script>
+
+</head>
+
+<body>
+
+<h1>Login Sistema IoT</h1>
+
+<input type="email" id="email" placeholder="Correo">
+
+<br>
+
+<input type="password" id="password" placeholder="Contraseña">
+
+<br>
+
+<button onclick="login()">
+Ingresar
+</button>
+
+<script>
+
+const poolData = {
+
+    UserPoolId: 'TU_USER_POOL_ID',
+
+    ClientId: 'TU_CLIENT_ID'
+};
+
+const userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
+
+function login(){
+
+    const email = document.getElementById("email").value;
+
+    const password = document.getElementById("password").value;
+
+    const authData = {
+        Username : email,
+        Password : password
+    };
+
+    const authDetails = new AmazonCognitoIdentity.AuthenticationDetails(authData);
+
+    const userData = {
+        Username : email,
+        Pool : userPool
+    };
+
+    const cognitoUser = new AmazonCognitoIdentity.CognitoUser(userData);
+
+    cognitoUser.authenticateUser(authDetails, {
+
+        onSuccess: function(result){
+
+            localStorage.setItem(
+                "token",
+                result.getIdToken().getJwtToken()
+            );
+
+            window.location = "index.html";
+        },
+
+        onFailure: function(err){
+
+            alert(err.message || JSON.stringify(err));
+        }
+    });
+}
+
+</script>
+
+</body>
+
+</html>
